@@ -21,7 +21,7 @@ public with sharing class CaseAgentActions {
         // Query cases by case number
         Map<String, Case> caseMap = new Map<String, Case>();
         for (Case c : [
-            SELECT Id, CaseNumber, Subject, Status, Category__c, ContactId, AccountId
+            SELECT Id, CaseNumber, Subject, Status, ContactId, AccountId
             FROM Case
             WHERE CaseNumber IN :caseNumbers
         ]) {
@@ -38,7 +38,6 @@ public with sharing class CaseAgentActions {
                 detail.caseNumber = c.CaseNumber;
                 detail.subject = c.Subject;
                 detail.status = c.Status;
-                detail.category = c.Category__c;
             } else {
                 detail.found = false;
                 detail.caseNumber = caseNum;

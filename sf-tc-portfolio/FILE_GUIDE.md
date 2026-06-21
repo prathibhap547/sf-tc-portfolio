@@ -308,7 +308,7 @@ sf-tc-portfolio/
   ```
 - **Features:**
   - Searches cases by number
-  - Shows case details (subject, status, category)
+  - Shows case details (subject, status)
   - Error handling
   - Loading state
 - **Edit it if:** You want to change search behavior or add features

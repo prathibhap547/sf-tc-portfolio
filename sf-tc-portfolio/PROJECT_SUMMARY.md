@@ -83,7 +83,7 @@ sf-tc-portfolio/
 
 1. **getCaseDetails(List<String> caseNumbers)**
    - Looks up cases by case number
-   - Returns: found status, case ID, subject, status, category
+   - Returns: found status, case ID, subject, status
    - Use case: Retrieve case information from case number
 
 2. **updateCaseStatus(List<CaseAgentActions.CaseUpdateRequest> requests)**
@@ -117,7 +117,7 @@ sf-tc-portfolio/
 
 **Features:**
 - Search for cases by case number
-- Display case details (subject, status, category)
+- Display case details (subject, status)
 - Handle errors gracefully
 - Clear form
 - Show/hide results dynamically

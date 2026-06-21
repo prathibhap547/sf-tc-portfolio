@@ -22,7 +22,6 @@ public class CaseAgentActionsTest {
         insert new Case(
             Subject = 'Billing Issue',
             Status = 'New',
-            Category__c = 'BILLING',
             ContactId = con.Id,
             AccountId = acc.Id
         );
@@ -30,7 +29,6 @@ public class CaseAgentActionsTest {
         insert new Case(
             Subject = 'Return Request',
             Status = 'New',
-            Category__c = 'RETURNS',
             ContactId = con.Id,
             AccountId = acc.Id
         );
@@ -41,13 +39,12 @@ public class CaseAgentActionsTest {
         Case c = [SELECT CaseNumber FROM Case WHERE Subject = 'Billing Issue' LIMIT 1];
         
         Test.startTest();
-        var results = CaseAgentActions.getCaseDetails(
+        List<CaseAgentActions.CaseDetail> results = CaseAgentActions.getCaseDetails(
             new List<String>{ c.CaseNumber }
         );
         Test.stopTest();
         
         System.assertEquals(true, results[0].found, 'Should be found');
-        System.assertEquals('BILLING', results[0].category, 'Wrong category');
         System.assertEquals(c.CaseNumber, results[0].caseNumber, 'Wrong case number');
         System.assertEquals('Billing Issue', results[0].subject, 'Wrong subject');
     }
@@ -55,7 +52,7 @@ public class CaseAgentActionsTest {
     @isTest
     static void testGetCase_notFound() {
         Test.startTest();
-        var results = CaseAgentActions.getCaseDetails(
+        List<CaseAgentActions.CaseDetail> results = CaseAgentActions.getCaseDetails(
             new List<String>{ '99999999' }
         );
         Test.stopTest();
@@ -73,7 +70,7 @@ public class CaseAgentActionsTest {
         }
         
         Test.startTest();
-        var results = CaseAgentActions.getCaseDetails(caseNumbers);
+        List<CaseAgentActions.CaseDetail> results = CaseAgentActions.getCaseDetails(caseNumbers);
         Test.stopTest();
         
         System.assertEquals(2, results.size(), 'Should return 2 results');
@@ -85,12 +82,12 @@ public class CaseAgentActionsTest {
     static void testUpdateCaseStatus() {
         Case c = [SELECT Id FROM Case WHERE Subject = 'Billing Issue' LIMIT 1];
         
-        var req = new CaseAgentActions.CaseUpdateRequest();
+        CaseAgentActions.CaseUpdateRequest req = new CaseAgentActions.CaseUpdateRequest();
         req.caseId = c.Id;
         req.newStatus = 'Working';
         
         Test.startTest();
-        var results = CaseAgentActions.updateCaseStatus(
+        List<String> results = CaseAgentActions.updateCaseStatus(
             new List<CaseAgentActions.CaseUpdateRequest>{ req }
         );
         Test.stopTest();
@@ -107,14 +104,14 @@ public class CaseAgentActionsTest {
         
         List<CaseAgentActions.CaseUpdateRequest> requests = new List<CaseAgentActions.CaseUpdateRequest>();
         for (Case c : cases) {
-            var req = new CaseAgentActions.CaseUpdateRequest();
+            CaseAgentActions.CaseUpdateRequest req = new CaseAgentActions.CaseUpdateRequest();
             req.caseId = c.Id;
             req.newStatus = 'Closed';
             requests.add(req);
         }
         
         Test.startTest();
-        var results = CaseAgentActions.updateCaseStatus(requests);
+        List<String> results = CaseAgentActions.updateCaseStatus(requests);
         Test.stopTest();
         
         System.assertEquals(2, results.size(), 'Should update 2 cases');
@@ -125,11 +122,11 @@ public class CaseAgentActionsTest {
 
     @isTest
     static void testReturn_eligible() {
-        var req = new CaseAgentActions.ReturnRequest();
+        CaseAgentActions.ReturnRequest req = new CaseAgentActions.ReturnRequest();
         req.orderDateStr = Date.today().addDays(-10).format();
         
         Test.startTest();
-        var r = CaseAgentActions.checkReturnEligibility(
+        List<CaseAgentActions.ReturnEligibility> r = CaseAgentActions.checkReturnEligibility(
             new List<CaseAgentActions.ReturnRequest>{ req }
         );
         Test.stopTest();
@@ -140,11 +137,11 @@ public class CaseAgentActionsTest {
 
     @isTest
     static void testReturn_notEligible() {
-        var req = new CaseAgentActions.ReturnRequest();
+        CaseAgentActions.ReturnRequest req = new CaseAgentActions.ReturnRequest();
         req.orderDateStr = Date.today().addDays(-45).format();
         
         Test.startTest();
-        var r = CaseAgentActions.checkReturnEligibility(
+        List<CaseAgentActions.ReturnEligibility> r = CaseAgentActions.checkReturnEligibility(
             new List<CaseAgentActions.ReturnRequest>{ req }
         );
         Test.stopTest();
@@ -155,11 +152,11 @@ public class CaseAgentActionsTest {
 
     @isTest
     static void testReturn_edgeCase_lastDay() {
-        var req = new CaseAgentActions.ReturnRequest();
+        CaseAgentActions.ReturnRequest req = new CaseAgentActions.ReturnRequest();
         req.orderDateStr = Date.today().addDays(-30).format();
         
         Test.startTest();
-        var r = CaseAgentActions.checkReturnEligibility(
+        List<CaseAgentActions.ReturnEligibility> r = CaseAgentActions.checkReturnEligibility(
             new List<CaseAgentActions.ReturnRequest>{ req }
         );
         Test.stopTest();
@@ -172,16 +169,16 @@ public class CaseAgentActionsTest {
     static void testReturn_multipleRequests() {
         List<CaseAgentActions.ReturnRequest> requests = new List<CaseAgentActions.ReturnRequest>();
         
-        var req1 = new CaseAgentActions.ReturnRequest();
+        CaseAgentActions.ReturnRequest req1 = new CaseAgentActions.ReturnRequest();
         req1.orderDateStr = Date.today().addDays(-10).format();
         requests.add(req1);
         
-        var req2 = new CaseAgentActions.ReturnRequest();
+        CaseAgentActions.ReturnRequest req2 = new CaseAgentActions.ReturnRequest();
         req2.orderDateStr = Date.today().addDays(-35).format();
         requests.add(req2);
         
         Test.startTest();
-        var results = CaseAgentActions.checkReturnEligibility(requests);
+        List<CaseAgentActions.ReturnEligibility> results = CaseAgentActions.checkReturnEligibility(requests);
         Test.stopTest();
         
         System.assertEquals(2, results.size(), 'Should return 2 results');
@@ -191,11 +188,11 @@ public class CaseAgentActionsTest {
 
     @isTest
     static void testReturn_invalidDate() {
-        var req = new CaseAgentActions.ReturnRequest();
+        CaseAgentActions.ReturnRequest req = new CaseAgentActions.ReturnRequest();
         req.orderDateStr = 'invalid-date';
         
         Test.startTest();
-        var r = CaseAgentActions.checkReturnEligibility(
+        List<CaseAgentActions.ReturnEligibility> r = CaseAgentActions.checkReturnEligibility(
             new List<CaseAgentActions.ReturnRequest>{ req }
         );
         Test.stopTest();
@@ -207,9 +204,9 @@ public class CaseAgentActionsTest {
     @isTest
     static void testEmptyRequests() {
         Test.startTest();
-        var detailResults = CaseAgentActions.getCaseDetails(new List<String>());
-        var updateResults = CaseAgentActions.updateCaseStatus(new List<CaseAgentActions.CaseUpdateRequest>());
-        var returnResults = CaseAgentActions.checkReturnEligibility(new List<CaseAgentActions.ReturnRequest>());
+        List<CaseAgentActions.CaseDetail> detailResults = CaseAgentActions.getCaseDetails(new List<String>());
+        List<String> updateResults = CaseAgentActions.updateCaseStatus(new List<CaseAgentActions.CaseUpdateRequest>());
+        List<CaseAgentActions.ReturnEligibility> returnResults = CaseAgentActions.checkReturnEligibility(new List<CaseAgentActions.ReturnRequest>());
         Test.stopTest();
         
         System.assertEquals(0, detailResults.size(), 'Should return empty list for details');

@@ -12,9 +12,6 @@
     },
     "apexSettings": {
       "enableAggregateCodeCoverageOnly": false
-    },
-    "caseSettings": {
-      "caseCommentAccessLevel": "Organization"
     }
   }
 }
