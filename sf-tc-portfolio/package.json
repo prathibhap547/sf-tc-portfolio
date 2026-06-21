@@ -1,0 +1,39 @@
+{
+  "name": "sf-tc-portfolio",
+  "version": "1.0.0",
+  "description": "CI/CD DevOps Pipeline with SFDX + GitHub Actions",
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint .",
+    "prepare": "husky install"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "setupFilesAfterEnv": [
+      "<rootDir>/jest.setup.js"
+    ],
+    "moduleNameMapper": {
+      "^lightning/(.+)$": "<rootDir>/jest.mocks.js"
+    },
+    "collectCoverageFrom": [
+      "force-app/**/*.js"
+    ],
+    "testMatch": [
+      "**/__tests__/**/*.test.js"
+    ]
+  },
+  "devDependencies": {
+    "@babel/core": "^7.24.0",
+    "@babel/preset-env": "^7.24.0",
+    "@lwc/jest-transformer": "^3.2.0",
+    "babel-jest": "^29.7.0",
+    "eslint": "^8.57.0",
+    "@salesforce/eslint-config-lwc": "^3.5.0",
+    "jest": "^29.7.0",
+    "@testing-library/lwc": "^3.1.0"
+  },
+  "dependencies": {
+    "@salesforce/cli": "^2.41.0",
+    "lwc": "^5.4.0"
+  }
+}

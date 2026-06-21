@@ -1,0 +1,24 @@
+{
+  "name": "sf-tc-portfolio",
+  "description": "CI/CD DevOps Pipeline with SFDX + GitHub Actions",
+  "namespace": "",
+  "sfdcLoginUrl": "https://login.salesforce.com",
+  "sourceApiVersion": "59.0",
+  "packageDirectories": [
+    {
+      "path": "force-app",
+      "default": true
+    }
+  ],
+  "paths": {
+    "source": "force-app"
+  },
+  "plugins": {
+    "@salesforce/sfdx-scanner": {},
+    "@salesforce/plugin-source": {}
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  }
+}

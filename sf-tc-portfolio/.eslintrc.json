@@ -1,0 +1,15 @@
+{
+  "extends": [
+    "@salesforce/eslint-config-lwc/recommended"
+  ],
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 2020
+  },
+  "rules": {
+    "no-console": ["warn", { "allow": ["error", "warn"] }],
+    "prefer-arrow-callback": "error",
+    "no-var": "error",
+    "eqeqeq": ["error", "always"]
+  }
+}

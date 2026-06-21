@@ -1,0 +1,75 @@
+<template>
+    <lightning-card title="Case Search" icon-name="standard:case">
+        <div class="slds-p-around_medium">
+            <div class="slds-form-element">
+                <label class="slds-form-element__label" for="caseInput">
+                    Case Number
+                </label>
+                <div class="slds-form-element__control">
+                    <lightning-input
+                        id="caseInput"
+                        type="text"
+                        value={caseNumber}
+                        placeholder="Enter case number"
+                        onchange={handleInputChange}
+                    ></lightning-input>
+                </div>
+            </div>
+
+            <div class="slds-p-top_medium">
+                <lightning-button
+                    variant="brand"
+                    label="Search"
+                    title="Search for case"
+                    onclick={handleSearch}
+                    disabled={isLoading}
+                    class="slds-m-right_small"
+                ></lightning-button>
+                <lightning-button
+                    variant="neutral"
+                    label="Clear"
+                    title="Clear form"
+                    onclick={handleClear}
+                ></lightning-button>
+            </div>
+
+            <template if:true={isLoading}>
+                <div class="slds-p-top_medium">
+                    <lightning-spinner
+                        alternative-text="Loading"
+                        size="small"
+                    ></lightning-spinner>
+                </div>
+            </template>
+
+            <template if:true={caseDetails}>
+                <div class="slds-p-top_medium">
+                    <div class="slds-box slds-theme_success slds-p-medium">
+                        <p>
+                            <strong>Case Number:</strong> {caseDetails.caseNumber}
+                        </p>
+                        <p>
+                            <strong>Subject:</strong> {caseDetails.subject}
+                        </p>
+                        <p>
+                            <strong>Status:</strong> {caseDetails.status}
+                        </p>
+                        <template if:true={caseDetails.category}>
+                            <p>
+                                <strong>Category:</strong> {caseDetails.category}
+                            </p>
+                        </template>
+                    </div>
+                </div>
+            </template>
+
+            <template if:true={hasError}>
+                <div class="slds-p-top_medium">
+                    <div class="slds-box slds-theme_alert-texture slds-theme_warning">
+                        <p>No case found for case number: {caseNumber}</p>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>
